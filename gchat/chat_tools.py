@@ -29,6 +29,10 @@ async def list_spaces(
     """
     Lists Google Chat spaces (rooms and direct messages) accessible to the user.
 
+    Args:
+        page_size (int): Maximum number of spaces to return. Defaults to 100.
+        space_type (str): Type of spaces to list. Options: "all", "room", "dm". Defaults to "all".
+
     Returns:
         str: A formatted list of Google Chat spaces accessible to the user.
     """
@@ -74,6 +78,11 @@ async def get_messages(
 ) -> str:
     """
     Retrieves messages from a Google Chat space.
+
+    Args:
+        space_id (str): The ID of the space to retrieve messages from.
+        page_size (int): Maximum number of messages to return. Defaults to 50.
+        order_by (str): Order of messages. Defaults to "createTime desc".
 
     Returns:
         str: Formatted messages from the specified space.
@@ -125,6 +134,11 @@ async def send_message(
     """
     Sends a message to a Google Chat space.
 
+    Args:
+        space_id (str): The ID of the space to send the message to.
+        message_text (str): The text content of the message to send.
+        thread_key (Optional[str]): Optional thread key for threaded replies.
+
     Returns:
         str: Confirmation message with sent message details.
     """
@@ -165,6 +179,11 @@ async def search_messages(
 ) -> str:
     """
     Searches for messages in Google Chat spaces by text content.
+
+    Args:
+        query (str): The search query to match against message text.
+        space_id (Optional[str]): Optional specific space ID to search within. If not provided, searches across accessible spaces.
+        page_size (int): Maximum number of messages to return. Defaults to 25.
 
     Returns:
         str: A formatted list of messages matching the search query.

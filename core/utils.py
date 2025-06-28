@@ -1,64 +1,11 @@
 import io
 import logging
-import os
-import tempfile
 import zipfile, xml.etree.ElementTree as ET
 
 from typing import List, Optional
 
 logger = logging.getLogger(__name__)
 
-def check_credentials_directory_permissions(credentials_dir: str = ".credentials") -> None:
-    """
-    Check if the service has appropriate permissions to create and write to the .credentials directory.
-
-    Args:
-        credentials_dir: Path to the credentials directory (default: ".credentials")
-
-    Raises:
-        PermissionError: If the service lacks necessary permissions
-        OSError: If there are other file system issues
-    """
-    try:
-        # Check if directory exists
-        if os.path.exists(credentials_dir):
-            # Directory exists, check if we can write to it
-            test_file = os.path.join(credentials_dir, ".permission_test")
-            try:
-                with open(test_file, 'w') as f:
-                    f.write("test")
-                os.remove(test_file)
-                logger.info(f"Credentials directory permissions check passed: {os.path.abspath(credentials_dir)}")
-            except (PermissionError, OSError) as e:
-                raise PermissionError(f"Cannot write to existing credentials directory '{os.path.abspath(credentials_dir)}': {e}")
-        else:
-            # Directory doesn't exist, check if we can create it
-            parent_dir = os.path.dirname(os.path.abspath(credentials_dir)) or "."
-            if not os.access(parent_dir, os.W_OK):
-                raise PermissionError(f"Cannot create credentials directory '{os.path.abspath(credentials_dir)}': insufficient permissions in parent directory '{parent_dir}'")
-
-            # Test creating the directory
-            try:
-                os.makedirs(credentials_dir, exist_ok=True)
-                # Test writing to the new directory
-                test_file = os.path.join(credentials_dir, ".permission_test")
-                with open(test_file, 'w') as f:
-                    f.write("test")
-                os.remove(test_file)
-                logger.info(f"Created credentials directory with proper permissions: {os.path.abspath(credentials_dir)}")
-            except (PermissionError, OSError) as e:
-                # Clean up if we created the directory but can't write to it
-                try:
-                    if os.path.exists(credentials_dir):
-                        os.rmdir(credentials_dir)
-                except:
-                    pass
-                raise PermissionError(f"Cannot create or write to credentials directory '{os.path.abspath(credentials_dir)}': {e}")
-
-    except PermissionError:
-        raise
-    except Exception as e:
-        raise OSError(f"Unexpected error checking credentials directory permissions: {e}")
 
 def extract_office_xml_text(file_bytes: bytes, mime_type: str) -> Optional[str]:
     """

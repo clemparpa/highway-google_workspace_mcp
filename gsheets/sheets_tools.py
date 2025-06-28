@@ -31,7 +31,6 @@ async def list_spreadsheets(
     Lists spreadsheets from Google Drive that the user has access to.
 
     Args:
-        user_google_email (str): The user's Google email address. Required.
         max_results (int): Maximum number of spreadsheets to return. Defaults to 25.
 
     Returns:
@@ -80,7 +79,6 @@ async def get_spreadsheet_info(
     Gets information about a specific spreadsheet including its sheets.
 
     Args:
-        user_google_email (str): The user's Google email address. Required.
         spreadsheet_id (str): The ID of the spreadsheet to get info for. Required.
 
     Returns:
@@ -131,7 +129,6 @@ async def read_sheet_values(
     Reads values from a specific range in a Google Sheet.
 
     Args:
-        user_google_email (str): The user's Google email address. Required.
         spreadsheet_id (str): The ID of the spreadsheet. Required.
         range_name (str): The range to read (e.g., "Sheet1!A1:D10", "A1:D10"). Defaults to "A1:Z1000".
 
@@ -184,7 +181,6 @@ async def modify_sheet_values(
     Modifies values in a specific range of a Google Sheet - can write, update, or clear values.
 
     Args:
-        user_google_email (str): The user's Google email address. Required.
         spreadsheet_id (str): The ID of the spreadsheet. Required.
         range_name (str): The range to modify (e.g., "Sheet1!A1:D10", "A1:D10"). Required.
         values (Optional[List[List[str]]]): 2D array of values to write/update. Required unless clear_values=True.
@@ -252,7 +248,6 @@ async def create_spreadsheet(
     Creates a new Google Spreadsheet.
 
     Args:
-        user_google_email (str): The user's Google email address. Required.
         title (str): The title of the new spreadsheet. Required.
         sheet_names (Optional[List[str]]): List of sheet names to create. If not provided, creates one sheet with default name.
 
@@ -301,7 +296,6 @@ async def create_sheet(
     Creates a new sheet within an existing spreadsheet.
 
     Args:
-        user_google_email (str): The user's Google email address. Required.
         spreadsheet_id (str): The ID of the spreadsheet. Required.
         sheet_name (str): The name of the new sheet. Required.
 

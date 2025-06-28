@@ -8,10 +8,10 @@ version = "1.0.2"
 description = "Comprehensive, highly performant Google Workspace Streamable HTTP & SSE MCP Server for Calendar, Gmail, Docs, Sheets, Slides & Drive"
 readme = "README.md"
 keywords = [ "mcp", "google", "workspace", "llm", "ai", "claude", "model", "context", "protocol", "server"]
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 dependencies = [
  "fastapi>=0.115.12",
- "fastmcp>=2.3.3",
+ "fastmcp>=2.5.2",
  "google-api-python-client>=2.168.0",
  "google-auth-httplib2>=0.2.0",
  "google-auth-oauthlib>=1.2.2",
@@ -57,5 +57,5 @@ Changelog = "https://github.com/taylorwilsdon/google_workspace_mcp/releases"
 workspace-mcp = "main:main"
 
 [tool.setuptools]
-packages = [ "auth", "gcalendar", "core", "gdocs", "gdrive", "gmail", "gchat", "gsheets", "gforms", "gslides"]
+packages = [ "auth", "gcalendar", "core", "gdocs", "gdrive", "gmail", "gchat", "gsheets"]
 py-modules = [ "main"]

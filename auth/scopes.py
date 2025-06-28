@@ -44,13 +44,13 @@ SHEETS_READONLY_SCOPE = 'https://www.googleapis.com/auth/spreadsheets.readonly'
 SHEETS_WRITE_SCOPE = 'https://www.googleapis.com/auth/spreadsheets'
 
 # Google Forms API scopes
-FORMS_BODY_SCOPE = 'https://www.googleapis.com/auth/forms.body'
-FORMS_BODY_READONLY_SCOPE = 'https://www.googleapis.com/auth/forms.body.readonly'
-FORMS_RESPONSES_READONLY_SCOPE = 'https://www.googleapis.com/auth/forms.responses.readonly'
+# FORMS_BODY_SCOPE = 'https://www.googleapis.com/auth/forms.body'
+# FORMS_BODY_READONLY_SCOPE = 'https://www.googleapis.com/auth/forms.body.readonly'
+# FORMS_RESPONSES_READONLY_SCOPE = 'https://www.googleapis.com/auth/forms.responses.readonly'
 
 # Google Slides API scopes
-SLIDES_SCOPE = 'https://www.googleapis.com/auth/presentations'
-SLIDES_READONLY_SCOPE = 'https://www.googleapis.com/auth/presentations.readonly'
+# SLIDES_SCOPE = 'https://www.googleapis.com/auth/presentations'
+# SLIDES_READONLY_SCOPE = 'https://www.googleapis.com/auth/presentations.readonly'
 
 # Base OAuth scopes required for user identification
 BASE_SCOPES = [
@@ -93,16 +93,17 @@ SHEETS_SCOPES = [
     SHEETS_WRITE_SCOPE
 ]
 
-FORMS_SCOPES = [
-    FORMS_BODY_SCOPE,
-    FORMS_BODY_READONLY_SCOPE,
-    FORMS_RESPONSES_READONLY_SCOPE
-]
+# FORMS_SCOPES = [
+#     FORMS_BODY_SCOPE,
+#     FORMS_BODY_READONLY_SCOPE,
+#     FORMS_RESPONSES_READONLY_SCOPE
+# ]
 
-SLIDES_SCOPES = [
-    SLIDES_SCOPE,
-    SLIDES_READONLY_SCOPE
-]
+# SLIDES_SCOPES = [
+#     SLIDES_SCOPE,
+#     SLIDES_READONLY_SCOPE
+# ]
 
 # Combined scopes for all supported Google Workspace operations
-SCOPES = list(set(BASE_SCOPES + CALENDAR_SCOPES + DRIVE_SCOPES + GMAIL_SCOPES + DOCS_SCOPES + CHAT_SCOPES + SHEETS_SCOPES + FORMS_SCOPES + SLIDES_SCOPES))
+SCOPES = list(set(BASE_SCOPES + CALENDAR_SCOPES + DRIVE_SCOPES + GMAIL_SCOPES + DOCS_SCOPES + CHAT_SCOPES + SHEETS_SCOPES))
+# FORMS_SCOPES + SLIDES_SCOPES

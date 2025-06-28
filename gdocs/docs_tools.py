@@ -31,6 +31,10 @@ async def search_docs(
     """
     Searches for Google Docs by name using Drive API (mimeType filter).
 
+    Args:
+        query (str): Search query to match against document names.
+        page_size (int): Maximum number of documents to return. Defaults to 10.
+
     Returns:
         str: A formatted list of Google Docs matching the search query.
     """
@@ -72,6 +76,9 @@ async def get_doc_content(
     Retrieves content of a Google Doc or a Drive file (like .docx) identified by document_id.
     - Native Google Docs: Fetches content via Docs API.
     - Office files (.docx, etc.) stored in Drive: Downloads via Drive API and extracts text.
+
+    Args:
+        document_id (str): The ID of the document or file to retrieve content from.
 
     Returns:
         str: The document content with metadata header.
@@ -168,6 +175,10 @@ async def list_docs_in_folder(
     """
     Lists Google Docs within a specific Drive folder.
 
+    Args:
+        folder_id (str): The ID of the folder to search in. Defaults to 'root'.
+        page_size (int): Maximum number of documents to return. Defaults to 100.
+
     Returns:
         str: A formatted list of Google Docs in the specified folder.
     """
@@ -200,6 +211,10 @@ async def create_doc(
     """
     Creates a new Google Doc and optionally inserts initial content.
 
+    Args:
+        title (str): The title of the new document.
+        content (str): Optional initial content to insert into the document. Defaults to empty string.
+
     Returns:
         str: Confirmation message with document ID and link.
     """
@@ -228,7 +243,7 @@ async def read_doc_comments(
     Read all comments from a Google Doc.
 
     Args:
-        document_id: The ID of the Google Document
+        document_id (str): The ID of the Google Document.
 
     Returns:
         str: A formatted list of all comments and replies in the document.
@@ -295,9 +310,9 @@ async def reply_to_comment(
     Reply to a specific comment in a Google Doc.
 
     Args:
-        document_id: The ID of the Google Document
-        comment_id: The ID of the comment to reply to
-        reply_content: The content of the reply
+        document_id (str): The ID of the Google Document.
+        comment_id (str): The ID of the comment to reply to.
+        reply_content (str): The content of the reply.
 
     Returns:
         str: Confirmation message with reply details.
@@ -335,8 +350,8 @@ async def create_doc_comment(
     Create a new comment on a Google Doc.
 
     Args:
-        document_id: The ID of the Google Document
-        comment_content: The content of the comment
+        document_id (str): The ID of the Google Document.
+        comment_content (str): The content of the comment.
 
     Returns:
         str: Confirmation message with comment details.
@@ -373,8 +388,8 @@ async def resolve_comment(
     Resolve a comment in a Google Doc.
 
     Args:
-        document_id: The ID of the Google Document
-        comment_id: The ID of the comment to resolve
+        document_id (str): The ID of the Google Document.
+        comment_id (str): The ID of the comment to resolve.
 
     Returns:
         str: Confirmation message.
