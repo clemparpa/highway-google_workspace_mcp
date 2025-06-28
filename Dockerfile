@@ -1,68 +1,40 @@
-FROM python:3.11-slim
+# An example using multi-stage image builds to create a final image without uv.
+
+# First, build the application in the `/app` directory.
+# See `Dockerfile` for details.
+FROM ghcr.io/astral-sh/uv:0.7.9-python3.13-bookworm-slim AS builder
+
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+# Disable Python downloads, because we want to use the system interpreter
+# across both images. If using a managed Python version, it needs to be
+# copied from the build image into the final image; see `standalone.Dockerfile`
+# for an example.
+ENV UV_PYTHON_DOWNLOADS=0
 
 WORKDIR /app
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --locked --no-install-project --no-dev
+COPY . /app
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --locked --no-dev
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
 
-# Install uv for faster dependency management
-RUN pip install --no-cache-dir uv
+# Then, use a final image without uv
+FROM python:3.13-slim-bookworm 
+# It is important to use the image that matches the builder, as the path to the
+# Python executable must be the same, e.g., using `python:3.11-slim-bookworm`
+# will fail.
 
-# Copy dependency files
-COPY pyproject.toml uv.lock ./
+# Copy the application from the builder
+COPY --from=builder --chown=app:app /app /app
 
-# Install Python dependencies from pyproject.toml
-RUN uv pip install --system --no-cache \
-    fastapi>=0.115.12 \
-    fastmcp>=2.3.3 \
-    google-api-python-client>=2.168.0 \
-    google-auth-httplib2>=0.2.0 \
-    google-auth-oauthlib>=1.2.2 \
-    httpx>=0.28.1 \
-    "mcp[cli]>=1.6.0" \
-    sse-starlette>=2.3.3 \
-    uvicorn>=0.34.2
+# Place executables in the environment at the front of the path
+ENV PATH="/app/.venv/bin:$PATH"
 
-# Copy application code
-COPY . .
-
-# Create placeholder client_secrets.json for lazy loading capability
-RUN echo '{"installed":{"client_id":"placeholder","client_secret":"placeholder","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","redirect_uris":["http://localhost:8000/oauth2callback"]}}' > /app/client_secrets.json
-
-# Debug: Check PORT environment variable first
-RUN echo "=== Debug: Environment Variables ===" && \
-    echo "PORT=${PORT:-8000}" && \
-    echo "WORKSPACE_MCP_PORT=${WORKSPACE_MCP_PORT:-8000}" && \
-    echo "WORKSPACE_MCP_BASE_URI=${WORKSPACE_MCP_BASE_URI:-http://localhost}"
-
-# Debug: List files to verify structure
-RUN echo "=== Debug: Listing app directory contents ===" && \
-    ls -la /app && \
-    echo "=== Debug: Checking if main.py exists ===" && \
-    ls -la /app/main.py && \
-    echo "=== Debug: Checking Python path and imports ===" && \
-    python -c "import sys; print('Python path:', sys.path)" && \
-    python -c "import core.server; print('Server import successful')" && \
-    echo "=== Debug: Testing health endpoint ===" && \
-    python -c "from core.server import health_check; print('Health check function exists')"
-
-# Create non-root user for security
-RUN useradd --create-home --shell /bin/bash app \
-    && chown -R app:app /app
-USER app
-
-# Expose port (use default of 8000 if PORT not set)
 EXPOSE 8000
+# Adjust this port if your server listens on a different port.
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
-
-# Debug startup
-RUN echo "=== Debug: Final startup test ===" && \
-    python -c "print('Testing main.py import...'); import main; print('Main.py import successful')"
-
-# Command to run the application
-CMD ["python", "main.py", "--transport", "streamable-http"]
+# Define the command to run your terminal server.
+CMD ["python", "/app/main.py"]
